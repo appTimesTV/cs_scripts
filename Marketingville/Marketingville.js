@@ -113,17 +113,17 @@ class Task {
     }
 }
 
-function sounds() {
-    var name2SoundMap = new Map();
-    name2SoundMap.set("red train", DX.resource("76ababf9df9668a04ee327911b7b7189d3ba3ce95e28525ea4157473d056d3dd"));
-    name2SoundMap.set("blue car", DX.resource("766d1f64907a2ca336d9e06e40b6a9c3b8aa13797a127f5867ce27fcc7b39c17"));
-    name2SoundMap.set("yellow bike", DX.resource("dacb3375303d3b46fd894903cb27c1445fa3a10c9a01fe1d9388d3e543c79f5"));
-    name2SoundMap.set("pink skateboard", DX.resource("e57c24339e73abcb7ac4e9806ac20e391d7df68d72f8c2b660469d5e2d71c4dd"));
-    return name2SoundMap;
+function soundMap() {
+    return new Map([
+        ["red train", DX.resource("76ababf9df9668a04ee327911b7b7189d3ba3ce95e28525ea4157473d056d3dd")],
+        ["blue car", DX.resource("766d1f64907a2ca336d9e06e40b6a9c3b8aa13797a127f5867ce27fcc7b39c17")],
+        ["yellow bike", DX.resource("dacb3375303d3b46fd894903cb27c1445fa3a10c9a01fe1d9388d3e543c79f5")],
+        ["pink skateboard", DX.resource("e57c24339e73abcb7ac4e9806ac20e391d7df68d72f8c2b660469d5e2d71c4dd")]
+    ]);
 }
 
 var game = new Game();
 var gameFinished = false;
-game.init(sounds());
+game.init(soundMap());
 game.start();
 
