@@ -3,120 +3,118 @@ var incorrectSound = DX.resource("e930c4b7700aa3d7a1d0d4da9f275f090c0b4bcc50356f
 var tryAgainSound = DX.resource("d0f319700574fb088caf6264da8643f378e617a1e04bec7c8d1275bfa8b4ff5a");
 var alreadyFoundSound = DX.resource("befc438e7a51cd3efbea53aa6558007a1b16ff8e530cf8791d14fd9a8e4db9fe");
 
-class Game {
-    constructor() {
-        this._name2ItemsMap = new Map();
-        this._tasks = [];
-        this._currentTaskIndex = -1;
-    }
+function Game() {
+    this._name2ItemsMap = new Map();
+    this._tasks = [];
+    this._currentTaskIndex = -1;
+}
 
-    init(name2SoundMap) {
-        this._name2SoundMap = name2SoundMap;
-        var that = this;
-        DX.items().forEach(function(item) {
-            var name = item.name();
-            if (name !== undefined && name !== null && name.length > 0){
-                //adding only items with names
-                var items = that._name2ItemsMap.get(name);
-                if (items === undefined) {
-                    items = [item];
-                    that._name2ItemsMap.set(name, items);
-                } else {
-                    items.push(item);
-                }
-                item.activate(function() {
-                    if (gameFinished) return;
-                    var task = that.findTask(item.name());
-                    if (task !== undefined) {
-                        var currentTask = that._tasks[that._currentTaskIndex];
-                        if (task === currentTask) {
-                            // DX.log("This item belongs to the current task.")
-                            var items = that._name2ItemsMap.get(currentTask.name);
-                            var idx = items.indexOf(item);
-                            if (idx > -1) {
-                                items.splice(idx, 1);
-                                that._name2ItemsMap.set(currentTask.name, items);
-                                var finished = items.length === 0;
-                                // DX.log(items.length + " items left for the task");
-                                correctSound.play(function() {
-                                    // DX.log("Finished? " + finished);
-                                    incorrectSound.stop(); //just in case
-                                    if (finished) {
-                                        // DX.log("Done with the task.")
-                                        that.nextTask();
-                                    }
-                                });
-                            } else {
-                                //already removed
+Game.prototype.init = function (name2SoundMap) {
+    this._name2SoundMap = name2SoundMap;
+    var that = this;
+    DX.items().forEach(function (item) {
+        var name = item.name();
+        if (name !== undefined && name !== null && name.length > 0) {
+            //adding only items with names
+            var items = that._name2ItemsMap.get(name);
+            if (items === undefined) {
+                items = [item];
+                that._name2ItemsMap.set(name, items);
+            } else {
+                items.push(item);
+            }
+            item.activate(function () {
+                if (gameFinished) return;
+                var task = that.findTask(item.name());
+                if (task !== undefined) {
+                    var currentTask = that._tasks[that._currentTaskIndex];
+                    if (task === currentTask) {
+                        // DX.log("This item belongs to the current task.")
+                        var items = that._name2ItemsMap.get(currentTask.name);
+                        var idx = items.indexOf(item);
+                        if (idx > -1) {
+                            items.splice(idx, 1);
+                            that._name2ItemsMap.set(currentTask.name, items);
+                            var finished = items.length === 0;
+                            // DX.log(items.length + " items left for the task");
+                            correctSound.play(function () {
+                                // DX.log("Finished? " + finished);
                                 incorrectSound.stop(); //just in case
-                                alreadyFoundSound.play(function() {
-                                    tryAgainSound.play();
-                                });
-                            }
+                                if (finished) {
+                                    // DX.log("Done with the task.")
+                                    that.nextTask();
+                                }
+                            });
                         } else {
-                            correctSound.stop(); //just in case
-                            tryAgainSound.stop();
-                            incorrectSound.play();
+                            //already removed
+                            incorrectSound.stop(); //just in case
+                            alreadyFoundSound.play(function () {
+                                tryAgainSound.play();
+                            });
                         }
                     } else {
-                        DX.log("Item has no tasks assigned: " + item.name());
                         correctSound.stop(); //just in case
                         tryAgainSound.stop();
                         incorrectSound.play();
                     }
-                });
-            }
-        });
-
-        this._name2SoundMap.forEach(function(value, key){
-            that.addTask(key);
-        });
-    }
-
-    taskCount() {
-        return this._tasks.length;
-    }
-
-    addTask(name) {
-        var items = this._name2ItemsMap.get(name);
-        if (items !== undefined && items.length > 0){
-            // DX.log("Adding task [" + name + "] with " + items.length + " items.");
-            this._tasks.push(new Task(name, items.length));
+                } else {
+                    DX.log("Item has no tasks assigned: " + item.name());
+                    correctSound.stop(); //just in case
+                    tryAgainSound.stop();
+                    incorrectSound.play();
+                }
+            });
         }
-    }
+    });
 
-    findTask(name) {
-        // DX.log("findTask for " + name);
-        for (let i = 0; i < this._tasks.length; i++) {
-            if (name === this._tasks[i].name) {
-                // DX.log("[findTask] Returning " + name);
-                return this._tasks[i];
-            }
-        }
-        return undefined;
-    }
+    this._name2SoundMap.forEach(function (value, key) {
+        that.addTask(key);
+    });
+}
 
-    nextTask() {
-        this._currentTaskIndex++;
-        if (this._currentTaskIndex < this._tasks.length) {
-            this._name2SoundMap.get(this._tasks[this._currentTaskIndex].name).play();
-        } else {
-            gameFinished = true;
-            //game is finished
-            //now what?
-        }
-    }
+/*
+ Game.prototype.taskCount = function () {
+ return this._tasks.length;
+ }
+ */
 
-    start() {
-        this.nextTask();
+Game.prototype.addTask = function (name) {
+    var items = this._name2ItemsMap.get(name);
+    if (items !== undefined && items.length > 0) {
+        // DX.log("Adding task [" + name + "] with " + items.length + " items.");
+        this._tasks.push(new Task(name, items.length));
     }
 }
 
-class Task {
-    constructor(name, count) {
-        this.name = name;
-        this.count = count;
+Game.prototype.findTask = function (name) {
+    // DX.log("findTask for " + name);
+    for (let i = 0; i < this._tasks.length; i++) {
+        if (name === this._tasks[i].name) {
+            // DX.log("[findTask] Returning " + name);
+            return this._tasks[i];
+        }
     }
+    return undefined;
+}
+
+Game.prototype.nextTask = function () {
+    this._currentTaskIndex++;
+    if (this._currentTaskIndex < this._tasks.length) {
+        this._name2SoundMap.get(this._tasks[this._currentTaskIndex].name).play();
+    } else {
+        gameFinished = true;
+        //game is finished
+        //now what?
+    }
+}
+
+Game.prototype.start = function () {
+    this.nextTask();
+}
+
+function Task(name, count) {
+    this.name = name;
+    this.count = count;
 }
 
 function soundMap() {
