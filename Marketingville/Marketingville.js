@@ -23,7 +23,7 @@ Game.prototype.init = function(name2SoundMap) {
             } else {
                 items.push(item);
             }
-            item.activate(function () {
+            item.activate(function() {
                 if (gameFinished) return;
                 var task = that.findTask(item.name());
                 if (task !== undefined) {
@@ -37,7 +37,7 @@ Game.prototype.init = function(name2SoundMap) {
                             that._name2ItemsMap.set(currentTask.name, items);
                             var finished = items.length === 0;
                             // DX.log(items.length + " items left for the task");
-                            correctSound.play(function () {
+                            correctSound.play(function() {
                                 // DX.log("Finished? " + finished);
                                 incorrectSound.stop(); //just in case
                                 if (finished) {
@@ -67,7 +67,7 @@ Game.prototype.init = function(name2SoundMap) {
         }
     });
 
-    this._name2SoundMap.forEach(function (value, key) {
+    this._name2SoundMap.forEach(function(value, key) {
         that.addTask(key);
     });
 }
