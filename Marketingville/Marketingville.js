@@ -109,6 +109,7 @@ Game.prototype.nextTask = function() {
 }
 
 Game.prototype.start = function() {
+    this._currentTaskIndex = -1;
     this.nextTask();
 }
 
