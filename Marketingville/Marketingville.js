@@ -9,7 +9,7 @@ function Game() {
     this._currentTaskIndex = -1;
 }
 
-Game.prototype.init = function (name2SoundMap) {
+Game.prototype.init = function(name2SoundMap) {
     this._name2SoundMap = name2SoundMap;
     var that = this;
     DX.items().forEach(function (item) {
@@ -78,7 +78,7 @@ Game.prototype.init = function (name2SoundMap) {
  }
  */
 
-Game.prototype.addTask = function (name) {
+Game.prototype.addTask = function(name) {
     var items = this._name2ItemsMap.get(name);
     if (items !== undefined && items.length > 0) {
         // DX.log("Adding task [" + name + "] with " + items.length + " items.");
@@ -86,7 +86,7 @@ Game.prototype.addTask = function (name) {
     }
 }
 
-Game.prototype.findTask = function (name) {
+Game.prototype.findTask = function(name) {
     // DX.log("findTask for " + name);
     for (let i = 0; i < this._tasks.length; i++) {
         if (name === this._tasks[i].name) {
@@ -97,7 +97,7 @@ Game.prototype.findTask = function (name) {
     return undefined;
 }
 
-Game.prototype.nextTask = function () {
+Game.prototype.nextTask = function() {
     this._currentTaskIndex++;
     if (this._currentTaskIndex < this._tasks.length) {
         this._name2SoundMap.get(this._tasks[this._currentTaskIndex].name).play();
@@ -108,7 +108,7 @@ Game.prototype.nextTask = function () {
     }
 }
 
-Game.prototype.start = function () {
+Game.prototype.start = function() {
     this.nextTask();
 }
 
