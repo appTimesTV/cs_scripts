@@ -104,7 +104,7 @@ Game.prototype.nextTask = function() {
     } else {
         gameFinished = true;
         //game is finished
-        //now what?
+        //now what ?
     }
 }
 
