@@ -1,3 +1,5 @@
+// Project: https://studio.cospaces.io/#Project:CBUheGP1l2O.Eug9uyQibR0:DXKnFTf_iod.F4bqXTjP27d
+
 var correctSound = DX.resource("729d3c7b54e2511e0d7b16352b869f74defb64d9d7448620ecd7fba4c45fbe94");
 var incorrectSound = DX.resource("e930c4b7700aa3d7a1d0d4da9f275f090c0b4bcc50356f5d32c309bd10bcd5ce");
 var tryAgainSound = DX.resource("d0f319700574fb088caf6264da8643f378e617a1e04bec7c8d1275bfa8b4ff5a");
@@ -24,7 +26,6 @@ Game.prototype.init = function(name2SoundMap) {
                 items.push(item);
             }
             item.activate(function() {
-                if (gameFinished) return;
                 var task = that.findTask(item.name());
                 if (task !== undefined) {
                     var currentTask = that._tasks[that._currentTaskIndex];
@@ -102,9 +103,7 @@ Game.prototype.nextTask = function() {
     if (this._currentTaskIndex < this._tasks.length) {
         this._name2SoundMap.get(this._tasks[this._currentTaskIndex].name).play();
     } else {
-        gameFinished = true;
-        //game is finished
-        //now what ?
+        DX.end();
     }
 }
 
@@ -128,7 +127,6 @@ function soundMap() {
 }
 
 var game = new Game();
-var gameFinished = false;
 game.init(soundMap());
 game.start();
 
